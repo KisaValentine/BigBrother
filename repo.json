@@ -1,0 +1,25 @@
+[
+    {
+        "Author": "Kisa Valentine",
+        "Name": "Big Brother",
+        "InternalName": "BigBrother",
+        "AssemblyVersion": "1.0.0.0",
+        "Description": "Fork of the Plugin. Allows you to track who has weapons and/or minions out in your current area.",
+        "ApplicableVersion": "any",
+        "RepoUrl": "https://github.com/KisaValentine/BigBrother",
+        "Tags": [
+            "monitoring"
+        ],
+
+    "DalamudApiLevel": 8,
+    "IsHide": "False",
+    "IsTestingExclusive": "False",
+    "DownloadCount": 0,
+    "LastUpdate": 1685419580,
+    "LoadPriority": 0,
+        "Punchline": "A plugin to make you feel like big brother.",
+    "DownloadLinkInstall": "https://github.com/KisaValentine/BigBrother/raw/main/latest.zip",
+    "DownloadLinkTesting": "https://github.com/KisaValentine/BigBrother/raw/main/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/KisaValentine/BigBrother/raw/main/latest.zip"
+    }
+]
