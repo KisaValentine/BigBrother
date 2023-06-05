@@ -6,6 +6,7 @@
   "Description": "Fork of the Plugin. Allows you to track who has weapons and/or minions out in your current area.",
   "ApplicableVersion": "any",
   "RepoUrl": "https://github.com/KisaValentine/BigBrother",
+  "IconUrl": "https://raw.githubusercontent.com/KisaValentine/BigBrother/main/data/icon.png",
   "Tags": [
     "monitoring"
   ],
