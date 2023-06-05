@@ -21,6 +21,6 @@
     "DownloadLinkInstall": "https://github.com/KisaValentine/BigBrother/raw/main/latest.zip",
     "DownloadLinkTesting": "https://github.com/KisaValentine/BigBrother/raw/main/latest.zip",
     "DownloadLinkUpdate": "https://github.com/KisaValentine/BigBrother/raw/main/latest.zip",
-    "IconUrl": "https://github.com/KisaValentine/BigBrother/raw/main/data/icon.png"
+    "IconUrl": "https://raw.githubusercontent.com/KisaValentine/BigBrother/main/data/icon.png"
     }
 ]
