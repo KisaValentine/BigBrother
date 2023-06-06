@@ -3,7 +3,7 @@
         "Author": "Kisa Valentine",
         "Name": "Big Brother",
         "InternalName": "BigBrother",
-        "AssemblyVersion": "1.0.0.0",
+        "AssemblyVersion": "1.0.0.1",
         "Description": "Fork of the Plugin. Allows you to track who has weapons and/or minions out in your current area.",
         "ApplicableVersion": "any",
         "RepoUrl": "https://github.com/KisaValentine/BigBrother",
