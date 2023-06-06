@@ -17,6 +17,8 @@ namespace BigBrother
 
         public bool MonitorWeapons { get; set; } = false;
 
+        public bool MonitorBanned { get; set; } = false;
+
         public bool PlaySounds { get; set; } = false;
 
         public int MonitorRange { get; set; } = 30;
@@ -30,6 +32,10 @@ namespace BigBrother
         public List<Player> ignorePlayers = new List<Player>();
 
         public int ignoredPlayersNumber = 0;
+
+        public List<Banned> banPlayers = new List<Banned>();
+
+        public int bannedPlayersNumber = 0;
 
         // the below exist just to make saving less cumbersome
         [NonSerialized]

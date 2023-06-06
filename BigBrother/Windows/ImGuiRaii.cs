@@ -8,12 +8,12 @@ namespace BigBrother.Windows
 {
     public sealed class ImGuiRaii : IDisposable
     {
-        private int _colorStack;
-        private int _fontStack;
-        private int _styleStack;
-        private float _indentation;
+        private int colorStack;
+        private int fontStack;
+        private int styleStack;
+        private float indentation;
 
-        private Stack<Action>? _onDispose;
+        private Stack<Action>? onDispose;
 
         public static ImGuiRaii NewGroup()
             => new ImGuiRaii().Group();
@@ -30,24 +30,24 @@ namespace BigBrother.Windows
         public ImGuiRaii PushColor(ImGuiCol which, uint color)
         {
             ImGui.PushStyleColor(which, color);
-            ++_colorStack;
+            ++colorStack;
             return this;
         }
 
         public ImGuiRaii PushColor(ImGuiCol which, Vector4 color)
         {
             ImGui.PushStyleColor(which, color);
-            ++_colorStack;
+            ++colorStack;
             return this;
         }
 
         public ImGuiRaii PopColors(int n = 1)
         {
-            var actualN = Math.Min(n, _colorStack);
+            var actualN = Math.Min(n, colorStack);
             if (actualN > 0)
             {
                 ImGui.PopStyleColor(actualN);
-                _colorStack -= actualN;
+                colorStack -= actualN;
             }
 
             return this;
@@ -56,24 +56,24 @@ namespace BigBrother.Windows
         public ImGuiRaii PushStyle(ImGuiStyleVar style, Vector2 value)
         {
             ImGui.PushStyleVar(style, value);
-            ++_styleStack;
+            ++styleStack;
             return this;
         }
 
         public ImGuiRaii PushStyle(ImGuiStyleVar style, float value)
         {
             ImGui.PushStyleVar(style, value);
-            ++_styleStack;
+            ++styleStack;
             return this;
         }
 
         public ImGuiRaii PopStyles(int n = 1)
         {
-            var actualN = Math.Min(n, _styleStack);
+            var actualN = Math.Min(n, styleStack);
             if (actualN > 0)
             {
                 ImGui.PopStyleVar(actualN);
-                _styleStack -= actualN;
+                styleStack -= actualN;
             }
 
             return this;
@@ -82,18 +82,18 @@ namespace BigBrother.Windows
         public ImGuiRaii PushFont(ImFontPtr font)
         {
             ImGui.PushFont(font);
-            ++_fontStack;
+            ++fontStack;
             return this;
         }
 
         public ImGuiRaii PopFonts(int n = 1)
         {
-            var actualN = Math.Min(n, _fontStack);
+            var actualN = Math.Min(n, fontStack);
 
             while (actualN-- > 0)
             {
                 ImGui.PopFont();
-                --_fontStack;
+                --fontStack;
             }
 
             return this;
@@ -104,7 +104,7 @@ namespace BigBrother.Windows
             if (width != 0)
             {
                 ImGui.Indent(width);
-                _indentation += width;
+                indentation += width;
             }
 
             return this;
@@ -117,8 +117,8 @@ namespace BigBrother.Windows
         {
             if (begin())
             {
-                _onDispose ??= new Stack<Action>();
-                _onDispose.Push(end);
+                onDispose ??= new Stack<Action>();
+                onDispose.Push(end);
                 return true;
             }
 
@@ -128,28 +128,28 @@ namespace BigBrother.Windows
         public ImGuiRaii Begin(Action begin, Action end)
         {
             begin();
-            _onDispose ??= new Stack<Action>();
-            _onDispose.Push(end);
+            onDispose ??= new Stack<Action>();
+            onDispose.Push(end);
             return this;
         }
 
         public void End(int n = 1)
         {
-            var actualN = Math.Min(n, _onDispose?.Count ?? 0);
+            var actualN = Math.Min(n, onDispose?.Count ?? 0);
             while (actualN-- > 0)
-                _onDispose!.Pop()();
+                onDispose!.Pop()();
         }
 
         public void Dispose()
         {
-            Unindent(_indentation);
-            PopColors(_colorStack);
-            PopStyles(_styleStack);
-            PopFonts(_fontStack);
-            if (_onDispose != null)
+            Unindent(indentation);
+            PopColors(colorStack);
+            PopStyles(styleStack);
+            PopFonts(fontStack);
+            if (onDispose != null)
             {
-                End(_onDispose.Count);
-                _onDispose = null;
+                End(onDispose.Count);
+                onDispose = null;
             }
         }
     }

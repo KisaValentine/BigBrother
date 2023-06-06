@@ -1,6 +1,4 @@
 using BigBrother.Utils;
-using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace BigBrother.Windows

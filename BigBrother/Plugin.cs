@@ -1,13 +1,9 @@
 using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
-using System.Reflection;
 using Dalamud.Interface.Windowing;
 using BigBrother.Windows;
-using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Game.ClientState;
 using Dalamud.Game;
 using System.Collections.Generic;
 using System;
@@ -27,8 +23,8 @@ namespace BigBrother
 
         public static Dictionary<IntPtr, GameObject> TrackedPlayers = new Dictionary<IntPtr, GameObject>();
 
-        private MonitorWindow _monitorWindow;
-        private ConfigWindow _configWindow;
+        private MonitorWindow monitorWindow;
+        private ConfigWindow configWindow;
 
 
         [PluginService][RequiredVersion("1.0")] public static ObjectTable Objects { get; private set; } = null!;
@@ -49,10 +45,10 @@ namespace BigBrother
             Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Initialize(this.PluginInterface);
 
-            _monitorWindow = new MonitorWindow();
-            _configWindow = new ConfigWindow();
-            WindowSystem.AddWindow(_monitorWindow);
-            WindowSystem.AddWindow(_configWindow);
+            monitorWindow = new MonitorWindow();
+            configWindow = new ConfigWindow();
+            WindowSystem.AddWindow(monitorWindow);
+            WindowSystem.AddWindow(configWindow);
 
             this.CommandManager.AddHandler(ConfigCommand, new CommandInfo(OnCommand)
             {
@@ -71,8 +67,8 @@ namespace BigBrother
 
         public void Dispose()
         {
-            _monitorWindow.Dispose();
-            _configWindow.Dispose();
+            monitorWindow.Dispose();
+            configWindow.Dispose();
             WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(ConfigCommand);
             this.CommandManager.RemoveHandler(MonitorCommand);
@@ -83,8 +79,10 @@ namespace BigBrother
             switch (args) {
                case "":
                     WindowSystem.GetWindow("Monitor")!.IsOpen = true;
+
                     break;
                 case "config":
+
                     WindowSystem.GetWindow("Configuration Window")!.IsOpen = true;
                     break;
             }
@@ -95,9 +93,11 @@ namespace BigBrother
             WindowSystem.Draw();
         }
 
-        public void DrawConfigUI()
+        public static void DrawConfigUI()
         {
+
             WindowSystem.GetWindow("Configuration Window")!.IsOpen = true;
+
         }
     }
 }

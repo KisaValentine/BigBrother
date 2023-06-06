@@ -1,10 +1,7 @@
-using BigBrother.SeFunctions;
 using BigBrother.Utils;
-using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects.Enums;
 using ImGuiNET;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace BigBrother.Windows
 {
@@ -41,6 +38,7 @@ namespace BigBrother.Windows
             var trackPeople = Plugin.Configuration.TrackPeople;
             var trackWeapons = Plugin.Configuration.MonitorWeapons;
             var trackMinions = Plugin.Configuration.MonitorMinions;
+            var trackBanned = Plugin.Configuration.MonitorBanned;
             var playSounds = Plugin.Configuration.PlaySounds;
 
             if (!raii.Begin(() => ImGui.BeginTabItem("Config"), ImGui.EndTabItem))
@@ -67,14 +65,20 @@ namespace BigBrother.Windows
                 Plugin.Configuration.Save();
             }
 
+            if (ImGui.Checkbox("Monitor Banned", ref trackBanned))
+            {
+                Plugin.Configuration.MonitorBanned = trackBanned;
+                Plugin.Configuration.Save();
+            }
+
             if (ImGui.Checkbox("Play Sounds", ref playSounds))
             {
                 Plugin.Configuration.PlaySounds = playSounds;
                 Plugin.Configuration.Save();
             }
-            if (ImGui.SliderInt("Monitor Radius", ref _monitorRange, 0, 100))
+            if (ImGui.SliderInt("Monitor Radius", ref monitorRange, 0, 100))
             {
-                Plugin.Configuration.MonitorRange = _monitorRange;
+                Plugin.Configuration.MonitorRange = monitorRange;
             }
 
             if (ImGui.BeginCombo("Player notification", Plugin.Configuration.SoundPlayer_s))
@@ -100,7 +104,7 @@ namespace BigBrother.Windows
                         playerSound = comboBoxSounds[i].name!;
                         Plugin.Configuration.SoundPlayer_s = comboBoxSounds[i].name!;
                         Plugin.Configuration.SoundPlayer = comboBoxSounds[i].sound;
-                        _sounds.Play(Plugin.Configuration.SoundPlayer);
+                        sounds.Play(Plugin.Configuration.SoundPlayer);
                         Plugin.Configuration.Save();
                         
                     } else if (type is ObjectKind.Companion)
@@ -108,10 +112,10 @@ namespace BigBrother.Windows
                         minionSound = comboBoxSounds[i].name!;
                         Plugin.Configuration.SoundMinion_s = comboBoxSounds[i].name!;
                         Plugin.Configuration.SoundMinion = comboBoxSounds[i].sound;
-                        _sounds.Play(Plugin.Configuration.SoundMinion);
+                        sounds.Play(Plugin.Configuration.SoundMinion);
                         Plugin.Configuration.Save();
                     }
-                    
+
                 }
 
                 if (is_selected && ImGui.IsMouseClicked(ImGuiMouseButton.Left))

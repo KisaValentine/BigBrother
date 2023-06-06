@@ -10,7 +10,7 @@ namespace BigBrother.SeFunctions
     {
 
         public PlaySound(SigScanner sigScanner)
-            : base(sigScanner, "E8 ?? ?? ?? ?? 4D 39 BE")
+            : base(sigScanner, "E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??")
         { }
 
         public void Play(Sounds id)

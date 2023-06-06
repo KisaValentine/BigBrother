@@ -3,10 +3,8 @@ using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Logging;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
 
@@ -37,14 +35,22 @@ namespace BigBrother.Windows
             }
         }
 
-        public bool IsCharacterIgnored(string name)
+        public static bool IsCharacterIgnored(string name)
         =>
             name switch
             {
                 "" => false,
                 _ => Plugin.Configuration.ignorePlayers.FirstOrDefault(player => player.name.Contains(name)) != null,
             };
-        
+
+        public static bool IsCharacterBanned(string name)
+    =>
+        name switch
+        {
+            "" => false,
+            _ => Plugin.Configuration.banPlayers.FirstOrDefault(banned => banned.name.Contains(name)) != null,
+        };
+
         private void AddEntry(GameObject? obj, ImGuiSelectableFlags flags = ImGuiSelectableFlags.None)
         {
             if (obj == null) return;
@@ -56,17 +62,31 @@ namespace BigBrother.Windows
             if (Plugin.Configuration.MonitorMinions && obj.ObjectKind is ObjectKind.Companion)
             {
                 status += $"{obj.YalmDistanceX} - {obj.YalmDistanceZ} | ";
-                status += "M";
+                status += "M ";
             }
 
             if (Plugin.Configuration.MonitorWeapons && obj.ObjectKind is ObjectKind.Player)
             {
                 status += $"{obj.YalmDistanceX} - {obj.YalmDistanceZ} | ";
-                status += "W";
+                status += "W ";
+            } 
+
+            if (Plugin.Configuration.MonitorBanned && IsCharacterBanned(obj.Name.TextValue))
+            {
+                status += $"{obj.YalmDistanceX} - {obj.YalmDistanceZ} | ";
+                status += "B ";
+            }
+
+            if (IsCharacterBanned(obj.Name.TextValue) != false)
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, obj.ObjectKind == ObjectKind.Player ? _red : _red); 
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, obj.ObjectKind == ObjectKind.Player ? _white : _turquoise);
             }
 
 
-            ImGui.PushStyleColor(ImGuiCol.Text, obj.ObjectKind == ObjectKind.Player ? _white : _red);
             ImGui.Selectable(obj.Name.TextValue, false, flags);
 
             var windowWidth = ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X;
@@ -99,21 +119,25 @@ namespace BigBrother.Windows
                 if (obj is null) continue;
                 if (Plugin.TrackedPlayers.ContainsKey(obj.Address)) continue;
                 if (IsCharacterIgnored(obj.Name.TextValue)) continue;
+                if (IsCharacterBanned(obj.Name.TextValue)) continue;
                 if (Maths.CalculateEuclideanDistance(obj.YalmDistanceX, obj.YalmDistanceZ) > Plugin.Configuration.MonitorRange) continue;
                 if (!(obj.ObjectKind == ObjectKind.Player && !Player.IsWeaponHidden((Character)obj)) && !(obj.ObjectKind == ObjectKind.Companion)) continue;
                 if (obj.Name.TextValue == "") continue;
 
+#pragma warning disable CS0618 // Typ oder Element ist veraltet
                 if (Plugin.Configuration.PlaySounds && Plugin.WindowSystem.GetWindow("Monitor")!.IsOpen)
                 {
-                    if(obj.ObjectKind == ObjectKind.Companion) _sounds.Play(Plugin.Configuration.SoundMinion);
                     if(obj.ObjectKind == ObjectKind.Player) _sounds.Play(Plugin.Configuration.SoundPlayer);
+                    if(obj.ObjectKind == ObjectKind.Companion) _sounds.Play(Plugin.Configuration.SoundMinion);
                 }
+#pragma warning restore CS0618 // Typ oder Element ist veraltet
+
                 PluginLog.Information($"Adding {obj.Name.TextValue}");
                 Plugin.TrackedPlayers.Add(obj.Address, obj);
             }
         }
 
-        private void CleanMonitoringList()
+        private static void CleanMonitoringList()
         {
             foreach (KeyValuePair<IntPtr, GameObject> entry in Plugin.TrackedPlayers)
             {
@@ -137,7 +161,7 @@ namespace BigBrother.Windows
             }
         }
 
-        private bool IsStillValidTrack(ObjectKind objKind, GameObject gameObject1, GameObject gameObject2)
+        private static bool IsStillValidTrack(ObjectKind objKind, GameObject gameObject1, GameObject gameObject2)
         =>
             objKind switch
             {

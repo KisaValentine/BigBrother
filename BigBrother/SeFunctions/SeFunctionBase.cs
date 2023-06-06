@@ -64,7 +64,9 @@ namespace BigBrother.SeFunctions
         {
             if (Address != IntPtr.Zero)
             {
+#pragma warning disable CS0618 // Typ oder Element ist veraltet
                 var hook = new Hook<T>(Address, detour);
+#pragma warning restore CS0618 // Typ oder Element ist veraltet
                 hook.Enable();
                 PluginLog.Debug($"Hooked onto {GetType().Name} at address 0x{Address.ToInt64():X16}.");
                 return hook;

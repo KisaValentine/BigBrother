@@ -4,15 +4,9 @@ using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Game.ClientState.Objects;
-using Dalamud.Logging;
 using Dalamud.Game;
 using System.Diagnostics;
 using BigBrother.SeFunctions;
-using System.Linq;
-using BigBrother.Utils;
-using Lumina.Excel.GeneratedSheets;
 
 namespace BigBrother.Windows
 {
@@ -26,6 +20,7 @@ namespace BigBrother.Windows
         protected Stopwatch counterUpdate = new Stopwatch();
         protected Vector4 _red = new Vector4(255, 0, 0, 255);
         protected Vector4 _white = new Vector4(255, 255, 255, 255);
+        protected Vector4 _turquoise = new Vector4(0, 255, 204, 255);
 
 
         public MonitorWindow() : base(
@@ -47,7 +42,7 @@ namespace BigBrother.Windows
         //Thanks https://git.anna.lgbt/ascclemens/PeepingTom/src/branch/main/Peeping%20Tom/TargetWatcher.cs#L48
         public void OnFrameworkUpdate(Framework framework)
         {
-            if (counterCleaning.ElapsedMilliseconds > 500)
+            if (counterCleaning.ElapsedMilliseconds > 300)
             {
                 if (Plugin.Configuration.TrackPeople)
                 {
