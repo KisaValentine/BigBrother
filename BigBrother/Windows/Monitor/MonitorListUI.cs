@@ -119,7 +119,6 @@ namespace BigBrother.Windows
                 if (obj is null) continue;
                 if (Plugin.TrackedPlayers.ContainsKey(obj.Address)) continue;
                 if (IsCharacterIgnored(obj.Name.TextValue)) continue;
-                if (IsCharacterBanned(obj.Name.TextValue)) continue;
                 if (Maths.CalculateEuclideanDistance(obj.YalmDistanceX, obj.YalmDistanceZ) > Plugin.Configuration.MonitorRange) continue;
                 if (!(obj.ObjectKind == ObjectKind.Player && !Player.IsWeaponHidden((Character)obj)) && !(obj.ObjectKind == ObjectKind.Companion)) continue;
                 if (obj.Name.TextValue == "") continue;
@@ -145,7 +144,7 @@ namespace BigBrother.Windows
                 var gameObject = entry.Value;
                 foreach (var obj in Plugin.Objects)
                 {
-                    double difference = Math.Abs(Plugin.Configuration.MonitorRange + 1);
+                    double difference = Math.Abs(Plugin.Configuration.MonitorRange + 2);
                      if (IsStillValidTrack(obj.ObjectKind, obj, gameObject) &&
                          (Maths.CalculateEuclideanDistance(obj.YalmDistanceX, obj.YalmDistanceZ) < difference))
                     {
