@@ -18,37 +18,36 @@ namespace BigBrother
         private const string MonitorCommand = "/bb";
         private DalamudPluginInterface PluginInterface { get; init; }
         private CommandManager CommandManager { get; init; }
-        public static Configuration Configuration { get; private set; } = null!;
+        public static Configuration Configuration { get; private set; } = null;
         public static WindowSystem WindowSystem = new("BigBrother");
 
         public static Dictionary<IntPtr, GameObject> TrackedPlayers = new Dictionary<IntPtr, GameObject>();
 
-        private MonitorWindow monitorWindow;
-        private ConfigWindow configWindow;
-
-
+        private MonitorWindow _monitorWindow;
+        private ConfigWindow _configWindow;
+        
         [PluginService][RequiredVersion("1.0")] public static ObjectTable Objects { get; private set; } = null!;
 
         [PluginService][RequiredVersion("1.0")] public static TargetManager TargetManager{ get; private set; } = null!;
 
         [PluginService][RequiredVersion("1.0")] public static Framework Framework { get; private set; } = null!;
 
-
-
-        public Plugin(
+        public Plugin
+        (
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-            [RequiredVersion("1.0")] CommandManager commandManager)
+            [RequiredVersion("1.0")] CommandManager commandManager
+        )
         {
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
 
             Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Initialize(this.PluginInterface);
-
-            monitorWindow = new MonitorWindow();
-            configWindow = new ConfigWindow();
-            WindowSystem.AddWindow(monitorWindow);
-            WindowSystem.AddWindow(configWindow);
+            
+            _monitorWindow = new MonitorWindow();
+            _configWindow = new ConfigWindow();
+            WindowSystem.AddWindow(_monitorWindow);
+            WindowSystem.AddWindow(_configWindow);
 
             this.CommandManager.AddHandler(ConfigCommand, new CommandInfo(OnCommand)
             {
@@ -62,22 +61,20 @@ namespace BigBrother
 
             this.PluginInterface.UiBuilder.Draw += DrawUI;
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
-            
         }
 
         public void Dispose()
         {
-            monitorWindow.Dispose();
-            configWindow.Dispose();
+            _monitorWindow.Dispose();
+            _configWindow.Dispose();
             WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(ConfigCommand);
             this.CommandManager.RemoveHandler(MonitorCommand);
         }
-
         private void OnCommand(string command, string args)
         {
             switch (args) {
-               case "":
+                case "":
                     WindowSystem.GetWindow("Monitor")!.IsOpen = true;
 
                     break;
@@ -87,7 +84,6 @@ namespace BigBrother
                     break;
             }
         }
-
         private void DrawUI()
         {
             WindowSystem.Draw();

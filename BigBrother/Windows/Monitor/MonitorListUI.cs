@@ -1,4 +1,4 @@
-using BigBrother.Utils;
+﻿using BigBrother.Utils;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Logging;
@@ -12,7 +12,6 @@ namespace BigBrother.Windows
 {
     internal partial class MonitorWindow
     {
-
         private void DrawMonitoringListUI()
         {
             if (Plugin.TrackedPlayers is null) return;
@@ -59,7 +58,7 @@ namespace BigBrother.Windows
             var status = "";
             ImGui.BeginGroup();
 
-            if (Plugin.Configuration.MonitorMinions && obj.ObjectKind is ObjectKind.Companion)
+                if (Plugin.Configuration.MonitorMinions && obj.ObjectKind is ObjectKind.Companion)
             {
                 status += $"{obj.YalmDistanceX} - {obj.YalmDistanceZ} | ";
                 status += "M ";
@@ -112,10 +111,11 @@ namespace BigBrother.Windows
             }
         }
 
+        
         private void BuildMonitoringList()
         {
             foreach (var obj in Plugin.Objects)
-            { 
+            {
                 if (obj is null) continue;
                 if (Plugin.TrackedPlayers.ContainsKey(obj.Address)) continue;
                 if (IsCharacterIgnored(obj.Name.TextValue)) continue;
@@ -124,13 +124,13 @@ namespace BigBrother.Windows
                 if (!(obj.ObjectKind == ObjectKind.Player && !Player.IsWeaponHidden((Character)obj)) && !(obj.ObjectKind == ObjectKind.Companion)) continue;
                 if (obj.Name.TextValue == "") continue;
 
-#pragma warning disable CS0618 // Typ oder Element ist veraltet
+
                 if (Plugin.Configuration.PlaySounds && Plugin.WindowSystem.GetWindow("Monitor")!.IsOpen)
                 {
-                    if(obj.ObjectKind == ObjectKind.Player) _sounds.Play(Plugin.Configuration.SoundPlayer);
+                    if(obj.ObjectKind == ObjectKind.Player)  _sounds.Play(Plugin.Configuration.SoundPlayer);
                     if(obj.ObjectKind == ObjectKind.Companion) _sounds.Play(Plugin.Configuration.SoundMinion);
                 }
-#pragma warning restore CS0618 // Typ oder Element ist veraltet
+
 
                 PluginLog.Information($"Adding {obj.Name.TextValue}");
                 Plugin.TrackedPlayers.Add(obj.Address, obj);
@@ -145,7 +145,9 @@ namespace BigBrother.Windows
                 var gameObject = entry.Value;
                 foreach (var obj in Plugin.Objects)
                 {
-                    if (IsStillValidTrack(obj.ObjectKind, obj, gameObject))
+                    double difference = Math.Abs(Plugin.Configuration.MonitorRange + 1);
+                     if (IsStillValidTrack(obj.ObjectKind, obj, gameObject) &&
+                         (Maths.CalculateEuclideanDistance(obj.YalmDistanceX, obj.YalmDistanceZ) < difference))
                     {
                         valid = true;
                         break;
@@ -165,10 +167,10 @@ namespace BigBrother.Windows
         =>
             objKind switch
             {
+
                 ObjectKind.Companion => gameObject1.Address == gameObject2.Address,
                 ObjectKind.Player => (gameObject1.Address == gameObject2.Address) && !Player.IsWeaponHidden((Character)gameObject2) && !IsCharacterIgnored(gameObject2.Name.TextValue),
                 _ => false,
             };
-
     }
 }

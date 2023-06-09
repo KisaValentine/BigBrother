@@ -1,4 +1,4 @@
-namespace BigBrother.Utils
+﻿namespace BigBrother.Utils
 {
     public enum Sounds : byte
     {

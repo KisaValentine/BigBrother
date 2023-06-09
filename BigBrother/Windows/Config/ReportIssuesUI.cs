@@ -1,4 +1,4 @@
-using Dalamud.Utility;
+﻿using Dalamud.Utility;
 using ImGuiNET;
 
 namespace BigBrother.Windows

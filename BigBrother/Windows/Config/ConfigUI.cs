@@ -1,4 +1,4 @@
-using BigBrother.Utils;
+﻿using BigBrother.Utils;
 using Dalamud.Game.ClientState.Objects.Enums;
 using ImGuiNET;
 using System.Collections.Generic;

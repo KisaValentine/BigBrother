@@ -1,4 +1,4 @@
-using BigBrother.Utils;
+﻿using BigBrother.Utils;
 using ImGuiNET;
 
 namespace BigBrother.Windows
